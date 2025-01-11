@@ -40,17 +40,13 @@ class Authprovider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
 
     _isLoggedIn = user["isLoggedIn"];
-    print(user["isLoggedIn"]);
+    // print(user["isLoggedIn"]);
     username = user["username"];
     email = user["email"];
-    String message = user["message"];
-    String status = user["status"].toString();
 
     await prefs.setBool('isLoggedIn', _isLoggedIn!);
     await prefs.setString("username", username!);
     await prefs.setString("email", email!);
-    await prefs.setString("message", message);
-    await prefs.setString("status", status);
 
     notifyListeners();
   }

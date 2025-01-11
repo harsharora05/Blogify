@@ -18,7 +18,7 @@ class PopularPostCard extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 250 / 1.75,
+            height: 210 / 1.75,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(

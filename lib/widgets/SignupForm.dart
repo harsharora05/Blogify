@@ -63,15 +63,24 @@ class SignupForm extends StatelessWidget {
                       final password = _passwordController.text;
                       final confirmPassword = _confirmPasswordController.text;
 
-                      final user =
+                      Map<String, dynamic> user =
                           await signUp(uname, email, password, confirmPassword);
-                      print(user["isLoggedIn"]);
-                      context.read<Authprovider>().saveData(user);
+                      // print(user["isLoggedIn"]);
+                      // print(user);
+                      if (user["status"] == 200) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(user["message"][0])));
 
-                      _confirmPasswordController.clear();
-                      _emailController.clear();
-                      _usernameController.clear();
-                      _passwordController.clear();
+                        context.read<Authprovider>().saveData(user);
+
+                        _confirmPasswordController.clear();
+                        _emailController.clear();
+                        _usernameController.clear();
+                        _passwordController.clear();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(user["message"])));
+                      }
                     }
                   },
                   child: Text(

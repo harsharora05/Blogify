@@ -22,6 +22,22 @@ class RecentPostProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> tagsPost(String tag) async {
+    recentPosts = [];
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      isLoading = true;
+      recentPosts = await getTagPosts(tag);
+    } catch (e) {
+      errorMessage = "Failed to load posts: $e";
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> AddNextRecentPosts(List<Post> nextPosts) async {
     recentPosts += nextPosts;
     notifyListeners();
@@ -39,7 +55,7 @@ class PopularPostProvider extends ChangeNotifier {
     try {
       isLoading = true;
       popularPosts = await getPopularPost();
-      print(popularPosts);
+      // print(popularPosts);
     } catch (e) {
       errorMessage = "Failed to load posts: $e";
     } finally {

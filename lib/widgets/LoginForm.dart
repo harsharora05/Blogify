@@ -50,9 +50,16 @@ class LoginForm extends StatelessWidget {
                       final password = _passwordController.text;
 
                       Map<String, dynamic> user = await login(uname, password);
-                      context.read<Authprovider>().saveData(user);
-                      _usernameController.clear();
-                      _passwordController.clear();
+                      if (user["status"] == 200) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(user["message"])));
+                        context.read<Authprovider>().saveData(user);
+                        _usernameController.clear();
+                        _passwordController.clear();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(user["message"])));
+                      }
                     }
                   },
                   child: Text(

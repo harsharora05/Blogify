@@ -13,10 +13,12 @@ Future<List<Post>> getRecentPost() async {
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
+      // print(jsonResponse);
       NextUrl = jsonResponse["next"].toString();
       List<Post> posts = (jsonResponse["results"] as List<dynamic>)
           .map((json) => Post.fromJson(json))
           .toList();
+
       return posts;
     } else {
       throw "Cant load post";
@@ -69,6 +71,27 @@ Future<List<Post>> getPopularPost() async {
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
+      List<Post> posts = (jsonResponse as List<dynamic>)
+          .map((json) => Post.fromJson(json))
+          .toList();
+      return posts;
+    } else {
+      throw "Cant load post";
+    }
+  } catch (e) {
+    return [];
+  }
+}
+
+Future<List<Post>> getTagPosts(String tag) async {
+  var url = Uri.https(
+      "solobloger-api.onrender.com", "api/search_blog/", {"search": tag});
+  var response = await http.get(url);
+  // print(response.body);
+  try {
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      // print(jsonResponse);
       List<Post> posts = (jsonResponse as List<dynamic>)
           .map((json) => Post.fromJson(json))
           .toList();

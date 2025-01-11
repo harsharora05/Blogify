@@ -62,6 +62,8 @@ class Profile extends StatelessWidget {
             InkWell(
               onTap: () async {
                 final res = await logout();
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text("Logout Successful")));
                 context.read<Authprovider>().saveData(res);
                 Navigator.of(context).pop();
               },

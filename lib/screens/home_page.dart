@@ -40,6 +40,8 @@ class _HomepageState extends State<Homepage> {
     context.read<RecentPostProvider>().AddNextRecentPosts(nextPosts);
   }
 
+  int? _value = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,19 +71,20 @@ class _HomepageState extends State<Homepage> {
             Consumer<PopularPostProvider>(
                 builder: (ctx, popularPostProvider, child) {
               if (popularPostProvider.isLoading) {
-                return const Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Center(child: CircularProgressIndicator()),
-                  ],
-                );
+                return SizedBox(
+                    height: 170,
+                    width: double.infinity,
+                    child: Center(child: CircularProgressIndicator()));
               } else if (popularPostProvider.errorMessage != null) {
                 return Center(child: Text(popularPostProvider.errorMessage!));
               } else if (popularPostProvider.popularPosts.isEmpty) {
-                return const Center(child: Text("No recent posts available"));
+                return SizedBox(
+                    height: 200,
+                    width: double.infinity,
+                    child: Center(child: Text("No Popular posts available")));
               } else {
                 return SizedBox(
-                  height: 250,
+                  height: 210,
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
@@ -127,7 +130,28 @@ class _HomepageState extends State<Homepage> {
                   final tag = tags[index];
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Chip(label: Text(tag)),
+                    child: ChoiceChip(
+                        showCheckmark: false,
+                        selected: _value == index,
+                        selectedColor: Colors.black,
+                        onSelected: (bool selected) {
+                          setState(() {
+                            _value = selected ? index : null;
+                          });
+                          if (_value == 0) {
+                            context
+                                .read<RecentPostProvider>()
+                                .InitialRecentPosts();
+                          } else {
+                            context
+                                .read<RecentPostProvider>()
+                                .tagsPost(tags[_value!]);
+                          }
+                        },
+                        label: Text(
+                          tag,
+                          style: TextStyle(color: Colors.deepPurpleAccent),
+                        )),
                   );
                 },
               ),
@@ -135,16 +159,17 @@ class _HomepageState extends State<Homepage> {
             Consumer<RecentPostProvider>(
               builder: (ctx, recentPostProvider, child) {
                 if (recentPostProvider.isLoading) {
-                  return const Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Center(child: CircularProgressIndicator()),
-                    ],
-                  );
+                  return Container(
+                      height: 250,
+                      width: double.infinity,
+                      child: Center(child: CircularProgressIndicator()));
                 } else if (recentPostProvider.errorMessage != null) {
                   return Center(child: Text(recentPostProvider.errorMessage!));
                 } else if (recentPostProvider.recentPosts.isEmpty) {
-                  return const Center(child: Text("No recent posts available"));
+                  return Container(
+                      height: 250,
+                      width: double.infinity,
+                      child: Center(child: Text("No recent posts available")));
                 } else {
                   return Expanded(
                     child: ListView.builder(
