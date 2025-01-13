@@ -71,6 +71,7 @@ Future<List<Post>> getPopularPost() async {
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
       List<Post> posts = (jsonResponse as List<dynamic>)
           .map((json) => Post.fromJson(json))
           .toList();
@@ -92,7 +93,7 @@ Future<List<Post>> getTagPosts(String tag) async {
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
       // print(jsonResponse);
-      List<Post> posts = (jsonResponse as List<dynamic>)
+      List<Post> posts = (jsonResponse['results'] as List<dynamic>)
           .map((json) => Post.fromJson(json))
           .toList();
       return posts;

@@ -1,9 +1,11 @@
 class Post {
+  int id;
   String content;
   String photo;
   String title;
   String username;
   String category;
+  bool isFav;
   int likes;
   Post(
       {required this.content,
@@ -11,7 +13,9 @@ class Post {
       required this.title,
       required this.username,
       required this.category,
-      required this.likes});
+      required this.likes,
+      required this.isFav,
+      required this.id});
 
   // Factory method to create a Post object from JSON
   factory Post.fromJson(Map<dynamic, dynamic> json) {
@@ -21,6 +25,8 @@ class Post {
         title: json['title'],
         username: json['user'],
         category: json['category'],
-        likes: json['likes']);
+        likes: json['likes'],
+        isFav: false,
+        id: json['id']);
   }
 }

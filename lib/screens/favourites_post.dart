@@ -1,6 +1,8 @@
-import "package:blog/data/post_data.dart";
-import "package:blog/widgets/RecentPostCard.dart";
+import "package:blog/model/post_model.dart";
+import "package:blog/provider/favourite_post_provider.dart";
+import "package:blog/screens/display_post.dart";
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
 class FavouritePost extends StatelessWidget {
   const FavouritePost({super.key});
@@ -8,15 +10,57 @@ class FavouritePost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Favourites"),
-      ),
-      body: ListView.builder(
-          itemCount: dummyPosts.length,
-          itemBuilder: (context, index) {
-            final post = dummyPosts[index];
-            return RecentPostCard(post: post);
-          }),
-    );
+        appBar: AppBar(
+          title: const Text("Favourites"),
+        ),
+        body: Consumer<Favouritepostprovider>(builder: (context, _, __) {
+          List<Post> fPosts = context.watch<Favouritepostprovider>().favPosts;
+          return ListView.builder(
+              itemCount: fPosts.length,
+              itemBuilder: (context, index) {
+                final post = fPosts[index];
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return Displaypost(
+                        post: post,
+                      );
+                    }));
+                  },
+                  child: Card(
+                    child: ListTile(
+                      trailing: InkWell(
+                          onTap: () async {
+                            bool operation = await context
+                                .read<Favouritepostprovider>()
+                                .toggleFavPosts(post);
+                            if (operation) {
+                              ScaffoldMessenger.of(context).clearSnackBars();
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      "Post added to favorites Successfully")));
+                            } else {
+                              ScaffoldMessenger.of(context).clearSnackBars();
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      "Post removed from favorites Successfully")));
+                            }
+                          },
+                          child: Icon(Icons.favorite_border_outlined)),
+                      leading: CircleAvatar(
+                        radius: 25,
+                        backgroundImage: NetworkImage(post.photo),
+                      ),
+                      title: Text(
+                        post.title,
+                        maxLines: 1,
+                      ),
+                      subtitle: Text(post.username),
+                    ),
+                  ),
+                );
+              });
+        }));
   }
 }
