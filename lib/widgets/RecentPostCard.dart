@@ -1,6 +1,8 @@
 import 'package:blog/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../provider/favourite_post_provider.dart';
 
 class RecentPostCard extends StatelessWidget {
   const RecentPostCard({
@@ -46,9 +48,30 @@ class RecentPostCard extends StatelessWidget {
                                 fontSize: 15),
                           ),
                         ),
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.all(8.0),
-                          child: Icon(Icons.favorite_border_outlined),
+                          child: InkWell(
+                              onTap: () async {
+                                bool operation = await context
+                                    .read<Favouritepostprovider>()
+                                    .toggleFavPosts(post);
+                                if (operation) {
+                                  ScaffoldMessenger.of(context)
+                                      .clearSnackBars();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              "Post added to favorites Successfully")));
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .clearSnackBars();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              "Post removed from favorites Successfully")));
+                                }
+                              },
+                              child: Icon(Icons.favorite_border_outlined)),
                         )
                       ],
                     ),

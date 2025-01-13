@@ -1,4 +1,5 @@
 import 'package:blog/provider/authProvider.dart';
+import 'package:blog/provider/favourite_post_provider.dart';
 import 'package:blog/provider/postProvider.dart';
 import 'package:blog/screens/Auth_screen.dart';
 import 'package:blog/screens/home_page.dart';
@@ -17,7 +18,8 @@ void main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => authProvider),
     ChangeNotifierProvider(create: (_) => rPostProvider),
-    ChangeNotifierProvider(create: (_) => pPostProvider)
+    ChangeNotifierProvider(create: (_) => pPostProvider),
+    ChangeNotifierProvider(create: (_) => Favouritepostprovider())
   ], child: const Myapp()));
 }
 

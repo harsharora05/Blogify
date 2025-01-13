@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../provider/favourite_post_provider.dart';
 
 import '../model/post_model.dart';
 
@@ -40,10 +42,36 @@ class PopularPostCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(top: 5, right: 5),
-                child: Icon(Icons.favorite_border),
-              )
+                child: InkWell(
+                  onTap: () async {
+                    bool operation = await context
+                        .read<Favouritepostprovider>()
+                        .toggleFavPosts(post);
+                    print(operation);
+                    if (operation) {
+                      ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content:
+                              Text("Post added to favorites Successfully")));
+                    } else {
+                      ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              "Post removed from favorites Successfully")));
+                    }
+                  },
+                  child: Icon(Icons.favorite, color: Colors.black),
+
+                  //   Consumer<Favouritepostprovider>(builder: (context, _, __) {
+                  // return context.watch<Favouritepostprovider>().setFav
+                  //     ? Icon(Icons.favorite, color: Colors.red)
+                  //     : Icon(Icons.favorite_border_outlined,
+                  //         color: Colors.black);
+                  // }
+                ),
+              ),
             ],
           ),
           Padding(
