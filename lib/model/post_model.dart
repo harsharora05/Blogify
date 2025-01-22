@@ -5,7 +5,6 @@ class Post {
   String title;
   String username;
   String category;
-  bool isFav;
   int likes;
   Post(
       {required this.content,
@@ -14,7 +13,6 @@ class Post {
       required this.username,
       required this.category,
       required this.likes,
-      required this.isFav,
       required this.id});
 
   // Factory method to create a Post object from JSON
@@ -26,7 +24,6 @@ class Post {
         username: json['user'],
         category: json['category'],
         likes: json['likes'],
-        isFav: false,
         id: json['id']);
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 class Favouritepostprovider extends ChangeNotifier {
   List<Post> favPosts = [];
-  bool setFav = false;
 
   Future<bool> toggleFavPosts(Post post) async {
     bool isContain = favPosts.any((favPost) => favPost.id == post.id);
@@ -17,5 +16,9 @@ class Favouritepostprovider extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  bool isPostFavorited(int postId) {
+    return favPosts.any((favPost) => favPost.id == postId);
   }
 }

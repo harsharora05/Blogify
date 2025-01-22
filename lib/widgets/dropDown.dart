@@ -4,9 +4,11 @@ class dropDown extends StatefulWidget {
   const dropDown({
     super.key,
     required this.categories,
+    required this.getCategory,
   });
 
   final List<String> categories;
+  final Function(String value) getCategory;
 
   @override
   State<dropDown> createState() => _dropDownState();
@@ -32,6 +34,7 @@ class _dropDownState extends State<dropDown> {
           // This is called when the user selects an item.
           setState(() {
             choosenCategory = value;
+            widget.getCategory(value!);
           });
         },
         borderRadius: const BorderRadius.all(Radius.circular(10)),

@@ -1,6 +1,7 @@
 import 'package:blog/widgets/dropDown.dart';
 import 'package:blog/widgets/ImagePick.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:super_bullet_list/bullet_list.dart';
 
 class Addpost extends StatefulWidget {
@@ -11,6 +12,26 @@ class Addpost extends StatefulWidget {
 }
 
 class _AddpostState extends State<Addpost> {
+  final titleController = TextEditingController();
+  String category = "";
+  String? title;
+  String? content;
+  XFile? image;
+  final contentController = TextEditingController();
+  final _formkey = GlobalKey<FormState>();
+
+  void getCategory(String value) {
+    setState(() {
+      category = value;
+    });
+  }
+
+  void getImage(XFile img) {
+    setState(() {
+      image = img;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<String> categories = [
@@ -18,7 +39,8 @@ class _AddpostState extends State<Addpost> {
       "Business",
       "Entertainment",
       "Life",
-      "Food"
+      "Food",
+      "Others"
     ];
     return Scaffold(
       appBar: AppBar(
@@ -29,7 +51,15 @@ class _AddpostState extends State<Addpost> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 5.0),
-            child: TextButton(onPressed: () {}, child: const Text("Publish")),
+            child: TextButton(
+                onPressed: () {
+                  if (_formkey.currentState!.validate()) {
+                    title = titleController.text;
+                    content = contentController.text;
+                  }
+                  // print("${title}  ${content} ${category} ${image!.path}");
+                },
+                child: const Text("Publish")),
           )
         ],
       ),
@@ -41,32 +71,43 @@ class _AddpostState extends State<Addpost> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    const pickImage(),
+                    pickImage(getImage: getImage),
                     const SizedBox(
                       height: 17,
                     ),
-                    const TextField(
-                      decoration: InputDecoration(
-                        label: Text("Title"),
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 17,
-                    ),
-                    dropDown(categories: categories),
-                    const SizedBox(
-                      height: 17,
-                    ),
-                    const TextField(
-                      maxLines: 12,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(), label: Text("Content")),
-                      keyboardType: TextInputType.multiline,
-                      maxLength: 3500,
-                    ),
+                    Form(
+                        key: _formkey,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: titleController,
+                              decoration: InputDecoration(
+                                label: Text("Title"),
+                                border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 17,
+                            ),
+                            dropDown(
+                                categories: categories,
+                                getCategory: getCategory),
+                            const SizedBox(
+                              height: 17,
+                            ),
+                            TextFormField(
+                              controller: contentController,
+                              maxLines: 12,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  label: Text("Content")),
+                              keyboardType: TextInputType.multiline,
+                              maxLength: 3500,
+                            ),
+                          ],
+                        )),
                     const SizedBox(
                       height: 10,
                     ),
