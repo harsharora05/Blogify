@@ -84,30 +84,29 @@ class _HomepageState extends State<Homepage> {
                     child: Center(child: Text("No Popular posts available")));
               } else {
                 return SizedBox(
-                  height: 210,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: popularPostProvider.popularPosts.length,
-                      itemBuilder: (context, index) {
-                        final post = popularPostProvider.popularPosts[index];
-                        return Container(
-                          padding: const EdgeInsets.all(5),
-                          height: double.infinity,
-                          width: 200,
-                          child: InkWell(
-                              onTap: () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (context) {
-                                  return Displaypost(
-                                    post: post,
-                                  );
-                                }));
-                              },
-                              child: PopularPostCard(post: post)),
-                        );
-                      }),
-                );
+                    height: 210,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: popularPostProvider.popularPosts.length,
+                        itemBuilder: (context, index) {
+                          final post = popularPostProvider.popularPosts[index];
+                          return Container(
+                            padding: const EdgeInsets.all(5),
+                            height: double.infinity,
+                            width: 200,
+                            child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) {
+                                    return Displaypost(
+                                      post: post,
+                                    );
+                                  }));
+                                },
+                                child: PopularPostCard(post: post)),
+                          );
+                        }));
               }
             }),
             Padding(
@@ -159,14 +158,14 @@ class _HomepageState extends State<Homepage> {
             Consumer<RecentPostProvider>(
               builder: (ctx, recentPostProvider, child) {
                 if (recentPostProvider.isLoading) {
-                  return Container(
+                  return SizedBox(
                       height: 250,
                       width: double.infinity,
                       child: Center(child: CircularProgressIndicator()));
                 } else if (recentPostProvider.errorMessage != null) {
                   return Center(child: Text(recentPostProvider.errorMessage!));
                 } else if (recentPostProvider.recentPosts.isEmpty) {
-                  return Container(
+                  return SizedBox(
                       height: 250,
                       width: double.infinity,
                       child: Center(child: Text("No recent posts available")));

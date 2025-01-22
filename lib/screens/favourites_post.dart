@@ -13,12 +13,15 @@ class FavouritePost extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Favourites"),
         ),
-        body: Consumer<Favouritepostprovider>(builder: (context, _, __) {
-          List<Post> fPosts = context.watch<Favouritepostprovider>().favPosts;
+        body: Consumer<Favouritepostprovider>(
+            builder: (context, Favouritepostprovider, child) {
+          List<Post> fPosts = Favouritepostprovider.favPosts;
           return ListView.builder(
               itemCount: fPosts.length,
               itemBuilder: (context, index) {
                 final post = fPosts[index];
+                bool isFavorite =
+                    Favouritepostprovider.isPostFavorited(post.id);
                 return InkWell(
                   onTap: () {
                     Navigator.of(context)
@@ -32,9 +35,9 @@ class FavouritePost extends StatelessWidget {
                     child: ListTile(
                       trailing: InkWell(
                           onTap: () async {
-                            bool operation = await context
-                                .read<Favouritepostprovider>()
-                                .toggleFavPosts(post);
+                            bool operation =
+                                await Favouritepostprovider.toggleFavPosts(
+                                    post);
                             if (operation) {
                               ScaffoldMessenger.of(context).clearSnackBars();
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -47,7 +50,12 @@ class FavouritePost extends StatelessWidget {
                                       "Post removed from favorites Successfully")));
                             }
                           },
-                          child: Icon(Icons.favorite_border_outlined)),
+                          child: isFavorite
+                              ? Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                )
+                              : Icon(Icons.favorite_border_outlined)),
                       leading: CircleAvatar(
                         radius: 25,
                         backgroundImage: NetworkImage(post.photo),

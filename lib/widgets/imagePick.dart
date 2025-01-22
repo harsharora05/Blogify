@@ -6,8 +6,10 @@ import 'package:image_picker/image_picker.dart';
 class pickImage extends StatefulWidget {
   const pickImage({
     super.key,
+    required this.getImage,
   });
 
+  final Function(XFile img) getImage;
   @override
   State<pickImage> createState() => _pickImageState();
 }
@@ -55,6 +57,7 @@ class _pickImageState extends State<pickImage> {
                 image = await _picker.pickImage(source: ImageSource.camera);
                 setState(() {
                   pickedimg = image;
+                  widget.getImage(pickedimg!);
                 });
               },
               child: const Text("Camera")),
