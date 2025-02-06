@@ -1,7 +1,9 @@
+import 'package:blog/provider/postProvider.dart';
 import 'package:blog/widgets/dropDown.dart';
 import 'package:blog/widgets/ImagePick.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:super_bullet_list/bullet_list.dart';
 
 class Addpost extends StatefulWidget {
@@ -14,9 +16,9 @@ class Addpost extends StatefulWidget {
 class _AddpostState extends State<Addpost> {
   final titleController = TextEditingController();
   String category = "";
-  String? title;
-  String? content;
-  XFile? image;
+  late String title;
+  late String content;
+  late XFile image;
   final contentController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
 
@@ -56,8 +58,10 @@ class _AddpostState extends State<Addpost> {
                   if (_formkey.currentState!.validate()) {
                     title = titleController.text;
                     content = contentController.text;
+                    context
+                        .read<RecentPostProvider>()
+                        .AddPost(title, content, category, image);
                   }
-                  // print("${title}  ${content} ${category} ${image!.path}");
                 },
                 child: const Text("Publish")),
           )
@@ -112,7 +116,8 @@ class _AddpostState extends State<Addpost> {
                       height: 10,
                     ),
                     const SuperBulletList(iconColor: Colors.black, items: [
-                      Text("Press Enter 2 times to start a new Paragraph.")
+                      Text("Press Enter 2 times to start a new Paragraph."),
+                      Text("Insert a landscape image (Recommended)")
                     ])
                   ],
                 ),
