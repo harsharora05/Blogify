@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-const tokenStorage = FlutterSecureStorage();
+const userStorage = FlutterSecureStorage();
 
 Future<Map<String, dynamic>> signUp(
     String username, String email, String pass, String confirmPass) async {
@@ -16,8 +16,9 @@ Future<Map<String, dynamic>> signUp(
       'password2': confirmPass
     });
     final jsonResponse = jsonDecode(response.body);
-    tokenStorage.write(key: "token", value: jsonResponse["token"]);
     if (response.statusCode == 200) {
+      userStorage.write(key: "token", value: jsonResponse["token"]);
+      userStorage.write(key: "username", value: jsonResponse["username"]);
       return {
         "isLoggedIn": true,
         "username": jsonResponse["username"],
@@ -58,8 +59,10 @@ Future<Map<String, dynamic>> login(String username, String pass) async {
     });
 
     final jsonResponse = jsonDecode(response.body);
-    tokenStorage.write(key: "token", value: jsonResponse["token"]);
+
     if (response.statusCode == 200) {
+      userStorage.write(key: "token", value: jsonResponse["token"]);
+      userStorage.write(key: "username", value: jsonResponse["username"]);
       return {
         "isLoggedIn": true,
         "username": jsonResponse["username"],
@@ -90,7 +93,7 @@ Future<Map<String, dynamic>> login(String username, String pass) async {
 }
 
 Future<Map<String, dynamic>> logout() async {
-  final token = await tokenStorage.read(key: "token");
+  final token = await userStorage.read(key: "token");
 
   var url = Uri.https("solobloger-api.onrender.com", "api-auth/logout/");
   try {
@@ -101,6 +104,9 @@ Future<Map<String, dynamic>> logout() async {
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
+      userStorage.write(key: "token", value: "");
+      userStorage.write(key: "username", value: "Guest");
+
       return {
         "isLoggedIn": false,
         "username": "Guest",

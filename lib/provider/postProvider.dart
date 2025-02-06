@@ -1,6 +1,12 @@
+import 'dart:math';
+
 import 'package:blog/httpRequests/postsRequest.dart';
 import 'package:blog/model/post_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:image_picker/image_picker.dart';
+
+var userStorage = FlutterSecureStorage();
 
 class RecentPostProvider extends ChangeNotifier {
   List<Post> recentPosts = [];
@@ -41,6 +47,22 @@ class RecentPostProvider extends ChangeNotifier {
   Future<void> AddNextRecentPosts(List<Post> nextPosts) async {
     recentPosts += nextPosts;
     notifyListeners();
+  }
+
+  Future<void> AddPost(
+      String title, String content, String category, XFile image) async {
+    final username = await userStorage.read(key: "username");
+    Random random = new Random();
+    Post postToUpload = Post(
+        content: content,
+        photo: "null",
+        title: title,
+        username: username!,
+        category: category,
+        likes: 0,
+        id: random.nextInt(20000000));
+    recentPosts.add(postToUpload);
+    uploadPost(title, content, category, image);
   }
 }
 
