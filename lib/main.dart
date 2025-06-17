@@ -1,3 +1,4 @@
+import 'package:blog/provider/authFormToggleProvider.dart';
 import 'package:blog/provider/authProvider.dart';
 import 'package:blog/provider/favourite_post_provider.dart';
 import 'package:blog/provider/postProvider.dart';
@@ -16,6 +17,7 @@ void main() async {
   pPostProvider.InitialPopularPosts();
 
   runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => AuthFormToggleProvider()),
     ChangeNotifierProvider(create: (_) => authProvider),
     ChangeNotifierProvider(create: (_) => rPostProvider),
     ChangeNotifierProvider(create: (_) => pPostProvider),

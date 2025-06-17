@@ -18,7 +18,7 @@ class Favouritepostprovider extends ChangeNotifier {
     }
   }
 
-  bool isPostFavorited(int postId) {
+  bool isPostFavorited(String postId) {
     return favPosts.any((favPost) => favPost.id == postId);
   }
 }

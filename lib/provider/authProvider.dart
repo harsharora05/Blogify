@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Authprovider extends ChangeNotifier {
   bool? _isLoggedIn;
-  // late Future<String?> _authToken;
   String? username;
   String? email;
 
@@ -18,7 +17,7 @@ class Authprovider extends ChangeNotifier {
       await prefs.setBool('isLoggedIn', false);
       await prefs.setString('username', "Guest");
       await prefs.setString('email', "");
-      await prefs.setString("message", "not login");
+      await prefs.setString("message", "Not Login");
       await prefs.setString("status", "Not Login");
 
       _isLoggedIn = false;

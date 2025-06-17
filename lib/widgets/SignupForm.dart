@@ -1,5 +1,5 @@
 import 'package:blog/httpRequests/authentication.dart';
-import 'package:blog/provider/authProvider.dart';
+import 'package:blog/provider/authFormToggleProvider.dart';
 import 'package:blog/widgets/formField.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,6 +12,7 @@ class SignupForm extends StatelessWidget {
   }) : _formKey = formKey;
 
   final GlobalKey<FormState> _formKey;
+  final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -33,21 +34,31 @@ class SignupForm extends StatelessWidget {
             key: _formKey,
             child: Column(children: [
               formFields(
+                autoFocus: true,
+                label: "Name",
+                isObs: false,
+                tcontroller: _nameController,
+              ),
+              formFields(
+                autoFocus: false,
                 label: "Username",
                 isObs: false,
                 tcontroller: _usernameController,
               ),
               formFields(
+                autoFocus: false,
                 label: "Email",
                 isObs: false,
                 tcontroller: _emailController,
               ),
               formFields(
+                autoFocus: false,
                 label: "Password",
                 isObs: true,
                 tcontroller: _passwordController,
               ),
               formFields(
+                autoFocus: false,
                 label: "Confirm Password",
                 isObs: true,
                 tcontroller: _confirmPasswordController,
@@ -58,28 +69,30 @@ class SignupForm extends StatelessWidget {
               ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      final name = _nameController.text;
                       final uname = _usernameController.text;
                       final email = _emailController.text;
                       final password = _passwordController.text;
                       final confirmPassword = _confirmPasswordController.text;
 
-                      Map<String, dynamic> user =
-                          await signUp(uname, email, password, confirmPassword);
-                      // print(user["isLoggedIn"]);
-                      // print(user);
-                      if (user["status"] == 200) {
+                      Map<String, dynamic> response = await signUp(
+                          name, uname, email, password, confirmPassword);
+
+                      if (response["status"] == 200) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(user["message"][0])));
+                            SnackBar(content: Text(response["message"])));
+                        Provider.of<AuthFormToggleProvider>(context,
+                                listen: false)
+                            .toggleForm();
 
-                        context.read<Authprovider>().saveData(user);
-
+                        _nameController.clear();
                         _confirmPasswordController.clear();
                         _emailController.clear();
                         _usernameController.clear();
                         _passwordController.clear();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(user["message"])));
+                            SnackBar(content: Text(response["message"])));
                       }
                     }
                   },

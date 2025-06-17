@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:blog/httpRequests/postsRequest.dart';
 import 'package:blog/model/post_model.dart';
 import 'package:flutter/material.dart';
@@ -49,20 +47,27 @@ class RecentPostProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> AddPost(
+  Future<Map<String, dynamic>> AddPost(
       String title, String content, String category, XFile image) async {
-    final username = await userStorage.read(key: "username");
-    Random random = new Random();
-    Post postToUpload = Post(
-        content: content,
-        photo: "null",
-        title: title,
-        username: username!,
-        category: category,
-        likes: 0,
-        id: random.nextInt(20000000));
-    recentPosts.add(postToUpload);
-    uploadPost(title, content, category, image);
+    var username = await userStorage.read(key: "username");
+    Map<String, dynamic> res =
+        await uploadPost(title, content, category, image);
+    if (res["status"] == 200) {
+      print(
+          "${res["post"]["likes"]},${res["post"]["_id"]},${res["post"]["image"]},${username}");
+      recentPosts.insert(
+          0,
+          Post(
+              content: res["post"]["content"],
+              photo: res["post"]["image"],
+              title: res["post"]["title"],
+              username: username.toString(),
+              category: res["post"]["category"],
+              likes: res["post"]["likes"],
+              id: res["post"]["_id"]));
+      notifyListeners();
+    }
+    return res;
   }
 }
 
@@ -77,7 +82,6 @@ class PopularPostProvider extends ChangeNotifier {
     try {
       isLoading = true;
       popularPosts = await getPopularPost();
-      // print(popularPosts);
     } catch (e) {
       errorMessage = "Failed to load posts: $e";
     } finally {
