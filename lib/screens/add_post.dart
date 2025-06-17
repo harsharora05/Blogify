@@ -54,13 +54,26 @@ class _AddpostState extends State<Addpost> {
           Padding(
             padding: const EdgeInsets.only(right: 5.0),
             child: TextButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formkey.currentState!.validate()) {
                     title = titleController.text;
                     content = contentController.text;
-                    context
+                    Map<String, dynamic> res = await context
                         .read<RecentPostProvider>()
                         .AddPost(title, content, category, image);
+                    if (res["status"] == 200) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(res["message"])));
+                      titleController.clear();
+                      contentController.clear();
+                      Navigator.of(context).pop();
+                    } else if (res["status"] == 400) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(res["message"])));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Post Upload Failed!!! Try Again...")));
+                    }
                   }
                 },
                 child: const Text("Publish")),

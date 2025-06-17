@@ -1,5 +1,5 @@
 class Post {
-  int id;
+  String id;
   String content;
   String photo;
   String title;
@@ -17,13 +17,14 @@ class Post {
 
   // Factory method to create a Post object from JSON
   factory Post.fromJson(Map<dynamic, dynamic> json) {
+    final by = json['by'] as Map<String, dynamic>;
     return Post(
-        content: json['content'],
-        photo: json['img'], // Adjusted to match the key in JSON
-        title: json['title'],
-        username: json['user'],
-        category: json['category'],
-        likes: json['likes'],
-        id: json['id']);
+        content: json['content'] as String,
+        photo: json['image'] as String,
+        title: json['title'] as String,
+        username: by['username'] as String,
+        category: json['category'] as String,
+        likes: json['likes'] as int,
+        id: json['_id'] as String);
   }
 }

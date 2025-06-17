@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class formFields extends StatelessWidget {
   const formFields(
       {super.key,
+      required this.autoFocus,
       required this.label,
       required this.isObs,
       required this.tcontroller});
 
+  final bool autoFocus;
   final String label;
   final bool isObs;
   final TextEditingController tcontroller;
@@ -16,6 +18,7 @@ class formFields extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: TextFormField(
+          autofocus: true,
           controller: tcontroller,
           obscureText: isObs,
           decoration: InputDecoration(

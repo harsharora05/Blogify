@@ -12,7 +12,7 @@ class LoginForm extends StatelessWidget {
   }) : _formKey = formKey;
 
   final GlobalKey<FormState> _formKey;
-  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
@@ -31,11 +31,13 @@ class LoginForm extends StatelessWidget {
             key: _formKey,
             child: Column(children: [
               formFields(
-                label: "Username",
+                autoFocus: true,
+                label: "Email",
                 isObs: false,
-                tcontroller: _usernameController,
+                tcontroller: _emailController,
               ),
               formFields(
+                autoFocus: false,
                 label: "Password",
                 isObs: true,
                 tcontroller: _passwordController,
@@ -46,15 +48,15 @@ class LoginForm extends StatelessWidget {
               ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      final uname = _usernameController.text;
+                      final email = _emailController.text;
                       final password = _passwordController.text;
 
-                      Map<String, dynamic> user = await login(uname, password);
+                      Map<String, dynamic> user = await login(email, password);
                       if (user["status"] == 200) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(user["message"])));
                         context.read<Authprovider>().saveData(user);
-                        _usernameController.clear();
+                        _emailController.clear();
                         _passwordController.clear();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(

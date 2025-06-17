@@ -10,15 +10,15 @@ late String NextUrl;
 var userStorage = FlutterSecureStorage();
 
 Future<List<Post>> getRecentPost() async {
-  var url = Uri.https("solobloger-api.onrender.com", "api/recent_blog/");
+  var url = Uri.http("10.0.2.2:3000", "/v1/blogs");
+  var token = await userStorage.read(key: "token");
 
   try {
-    var response = await http.get(url);
+    var response = await http.get(url, headers: {"token": token.toString()});
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
-      // print(jsonResponse);
-      NextUrl = jsonResponse["next"].toString();
-      List<Post> posts = (jsonResponse["results"] as List<dynamic>)
+      // NextUrl = jsonResponse["next"].toString();
+      List<Post> posts = (jsonResponse["blogs"] as List<dynamic>)
           .map((json) => Post.fromJson(json))
           .toList();
 
@@ -69,15 +69,17 @@ Future<List<Post>> loadMorePosts() async {
 }
 
 Future<List<Post>> getPopularPost() async {
-  var url = Uri.https("solobloger-api.onrender.com", "api/popular_blog/");
+  var url = Uri.http("10.0.2.2:3000", "/v1/famousBlogs");
   try {
     var response = await http.get(url);
+    print(response.body);
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
-      print(jsonResponse);
-      List<Post> posts = (jsonResponse as List<dynamic>)
+      print("famous posts:- $jsonResponse");
+      List<Post> posts = (jsonResponse["famousBlogs"] as List<dynamic>)
           .map((json) => Post.fromJson(json))
           .toList();
+
       return posts;
     } else {
       throw "Cant load post";
@@ -88,15 +90,12 @@ Future<List<Post>> getPopularPost() async {
 }
 
 Future<List<Post>> getTagPosts(String tag) async {
-  var url = Uri.https(
-      "solobloger-api.onrender.com", "api/search_blog/", {"search": tag});
+  var url = Uri.http("10.0.2.2:3000", "/v1/Blogs/$tag");
   var response = await http.get(url);
-  // print(response.body);
   try {
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
-      // print(jsonResponse);
-      List<Post> posts = (jsonResponse['results'] as List<dynamic>)
+      List<Post> posts = (jsonResponse["blogs"] as List<dynamic>)
           .map((json) => Post.fromJson(json))
           .toList();
       return posts;
@@ -108,27 +107,38 @@ Future<List<Post>> getTagPosts(String tag) async {
   }
 }
 
-void uploadPost(
+Future<Map<String, dynamic>> uploadPost(
     String title, String content, String category, XFile image) async {
-  var url = Uri.https("Solobloger-api.onrender.com", "api/create_blog/");
+  var url = Uri.http("10.0.2.2:3000", "/v1/blog");
   var token = await userStorage.read(key: "token");
-  print(token);
-  final request = await http.MultipartRequest('POST', url);
+  final request = http.MultipartRequest('POST', url);
 
-  request.headers.addAll({"Authorization": "token ${token.toString()}"});
+  request.headers.addAll({"token": token.toString()});
   request.fields['title'] = title;
   request.fields['content'] = content;
-  request.fields['category'] = category.toUpperCase();
-  var imageFile = await http.MultipartFile.fromPath('img', image.path);
+  request.fields['category'] = category;
+  var imageFile = await http.MultipartFile.fromPath('image', image.path);
   request.files.add(imageFile);
   var response = await request.send();
+  var responseBody = await response.stream.bytesToString();
+  var res = jsonDecode(responseBody);
   // Check the response
   if (response.statusCode == 200) {
-    // If the upload is successful, print the response body
-    var responseBody = await response.stream.bytesToString();
-    print("Response: ${jsonDecode(responseBody)}");
+    return ({
+      "status": response.statusCode,
+      "message": res["message"],
+      "post": res["post"]
+    });
+  } else if (response.statusCode == 400) {
+    return ({
+      "status": response.statusCode,
+      "message": res["message"],
+    });
   } else {
     // Handle errors
-    print("Failed to upload image. Status: ${response.statusCode}");
+    return ({
+      "status": response.statusCode,
+      "message": "Failed to upload the post!!! Try Again Later.."
+    });
   }
 }
