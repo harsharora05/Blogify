@@ -21,7 +21,13 @@ class _dropDownState extends State<dropDown> {
     return InputDecorator(
       decoration: InputDecoration(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-      child: DropdownButton(
+      child: DropdownButtonFormField(
+        validator: (value) {
+          if (value == null) {
+            return "Please Select a Category";
+          }
+          return null;
+        },
         value: choosenCategory,
         hint: const Text("Select a Category"),
         items: widget.categories.map<DropdownMenuItem<String>>((String value) {

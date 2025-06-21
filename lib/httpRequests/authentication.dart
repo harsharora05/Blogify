@@ -95,3 +95,25 @@ Map<String, dynamic> logout() {
     "status": 200
   };
 }
+
+Future<Map<String, dynamic>> changePassword(
+    String oldPassword, String newPassword, String confirmNewPassword) async {
+  print("in function");
+  var url = Uri.http('10.0.2.2:3000', '/v1/user/changePassword');
+  var token = await userStorage.read(key: "token");
+  try {
+    var response = await http.post(url, body: {
+      "oldPassword": oldPassword,
+      "newPassword": newPassword,
+      "confirmNewPassword": confirmNewPassword
+    }, headers: {
+      "token": token!
+    });
+
+    var jsonResponse = jsonDecode(response.body);
+    print(jsonResponse);
+    return {"message": jsonResponse["message"], "status": response.statusCode};
+  } catch (e) {
+    return {"message": "Something Went Wrong", "status": 500};
+  }
+}

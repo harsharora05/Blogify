@@ -10,18 +10,19 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final authProvider = Authprovider();
-  authProvider.initializeData();
+  await authProvider.initializeData();
   final rPostProvider = RecentPostProvider();
-  rPostProvider.InitialRecentPosts();
+  await rPostProvider.InitialRecentPosts();
   final pPostProvider = PopularPostProvider();
-  pPostProvider.InitialPopularPosts();
-
+  await pPostProvider.InitialPopularPosts();
+  final fPostProvider = Favouritepostprovider();
+  await fPostProvider.InitialFavPosts();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => AuthFormToggleProvider()),
     ChangeNotifierProvider(create: (_) => authProvider),
     ChangeNotifierProvider(create: (_) => rPostProvider),
     ChangeNotifierProvider(create: (_) => pPostProvider),
-    ChangeNotifierProvider(create: (_) => Favouritepostprovider())
+    ChangeNotifierProvider(create: (_) => fPostProvider),
   ], child: const Myapp()));
 }
 

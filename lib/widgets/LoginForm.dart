@@ -1,6 +1,5 @@
 import 'package:blog/httpRequests/authentication.dart';
 import 'package:blog/provider/authProvider.dart';
-import 'package:blog/widgets/formField.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -30,17 +29,51 @@ class LoginForm extends StatelessWidget {
         Form(
             key: _formKey,
             child: Column(children: [
-              formFields(
-                autoFocus: true,
-                label: "Email",
-                isObs: false,
-                tcontroller: _emailController,
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: TextFormField(
+                  autofocus: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please Enter Email";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    label: Text("Email"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                  ),
+                  obscureText: false,
+                  controller: _emailController,
+                ),
               ),
-              formFields(
-                autoFocus: false,
-                label: "Password",
-                isObs: true,
-                tcontroller: _passwordController,
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: TextFormField(
+                  autofocus: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please Enter Password";
+                    } else if (value.length < 8) {
+                      return "Minimum Characters Should be 8";
+                    } else if (!value.contains(RegExp(r'[A-Z]'))) {
+                      return "should contain one capital letter";
+                    } else if (!value.contains(RegExp(r'[0-9]'))) {
+                      return "Should contain one numeric letter";
+                    } else if (!value.contains(RegExp(r'[@#$%^&*]'))) {
+                      return "should contain 1 special character";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    label: Text("Password"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                  ),
+                  obscureText: true,
+                  controller: _passwordController,
+                ),
               ),
               const SizedBox(
                 height: 25,

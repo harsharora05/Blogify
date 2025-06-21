@@ -3,15 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../provider/favourite_post_provider.dart';
 
-import '../model/post_model.dart';
-
 class PopularPostCard extends StatelessWidget {
   const PopularPostCard({
     super.key,
     required this.post,
   });
 
-  final Post post;
+  final dynamic post;
 
   @override
   Widget build(BuildContext context) {

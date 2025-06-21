@@ -1,6 +1,5 @@
 import 'package:blog/httpRequests/authentication.dart';
 import 'package:blog/provider/authFormToggleProvider.dart';
-import 'package:blog/widgets/formField.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -33,35 +32,120 @@ class SignupForm extends StatelessWidget {
         Form(
             key: _formKey,
             child: Column(children: [
-              formFields(
-                autoFocus: true,
-                label: "Name",
-                isObs: false,
-                tcontroller: _nameController,
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: TextFormField(
+                  autofocus: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please Enter Name";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    label: Text("Name"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                  ),
+                  obscureText: false,
+                  controller: _nameController,
+                ),
               ),
-              formFields(
-                autoFocus: false,
-                label: "Username",
-                isObs: false,
-                tcontroller: _usernameController,
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: TextFormField(
+                  autofocus: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please Enter Username";
+                    } else if (value.length < 4) {
+                      return "Minimum Length Should Be 4 Chars";
+                    } else if (value.length > 25) {
+                      return "Length Should Not Exceed 25 Chars";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    label: Text("Username"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                  ),
+                  obscureText: false,
+                  controller: _usernameController,
+                ),
               ),
-              formFields(
-                autoFocus: false,
-                label: "Email",
-                isObs: false,
-                tcontroller: _emailController,
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: TextFormField(
+                  autofocus: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please Enter Email";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    label: Text("Email"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                  ),
+                  obscureText: false,
+                  controller: _emailController,
+                ),
               ),
-              formFields(
-                autoFocus: false,
-                label: "Password",
-                isObs: true,
-                tcontroller: _passwordController,
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: TextFormField(
+                  autofocus: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please Enter Password";
+                    } else if (value.length < 8) {
+                      return "Minimum Characters Should be 8";
+                    } else if (!value.contains(RegExp(r'[A-Z]'))) {
+                      return "should contain one capital letter";
+                    } else if (!value.contains(RegExp(r'[0-9]'))) {
+                      return "Should contain one numeric letter";
+                    } else if (!value.contains(RegExp(r'[@#$%^&*]'))) {
+                      return "should contain 1 special character";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    label: Text("Password"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                  ),
+                  obscureText: true,
+                  controller: _passwordController,
+                ),
               ),
-              formFields(
-                autoFocus: false,
-                label: "Confirm Password",
-                isObs: true,
-                tcontroller: _confirmPasswordController,
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: TextFormField(
+                  autofocus: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please Confirm Password";
+                    } else if (value.length < 8) {
+                      return "Minimum Characters Should be 8";
+                    } else if (!value.contains(RegExp(r'[A-Z]'))) {
+                      return "should contain one capital letter";
+                    } else if (!value.contains(RegExp(r'[0-9]'))) {
+                      return "Should contain one numeric letter";
+                    } else if (!value.contains(RegExp(r'[@#$%^&*]'))) {
+                      return "should contain 1 special character";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    label: Text("Confirm Password"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                  ),
+                  obscureText: true,
+                  controller: _confirmPasswordController,
+                ),
               ),
               const SizedBox(
                 height: 25,

@@ -15,7 +15,7 @@ class FavouritePost extends StatelessWidget {
         ),
         body: Consumer<Favouritepostprovider>(
             builder: (context, Favouritepostprovider, child) {
-          List<Post> fPosts = Favouritepostprovider.favPosts;
+          List<FavPost> fPosts = Favouritepostprovider.favPosts;
           if (fPosts.isEmpty) {
             return Center(
               child: Text("No Favourite Posts"),

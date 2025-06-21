@@ -1,5 +1,7 @@
 import 'package:blog/httpRequests/authentication.dart';
 import 'package:blog/provider/authProvider.dart';
+import 'package:blog/screens/change_Password.dart';
+import 'package:blog/screens/privacy_policy.dart';
 import 'package:blog/widgets/ProfileTile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,23 +47,35 @@ class Profile extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            const ProfileTile(
-              icon: Icons.password,
-              title: "Change Password",
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            const ProfileTile(
-              icon: Icons.lock,
-              title: "Privacy Policy",
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => ChangePassword()));
+              },
+              child: const ProfileTile(
+                icon: Icons.password,
+                title: "Change Password",
+              ),
             ),
             const SizedBox(
               height: 5,
             ),
             InkWell(
-              onTap: () async {
-                final res = await logout();
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => PrivacyPolicy()));
+              },
+              child: const ProfileTile(
+                icon: Icons.lock,
+                title: "Privacy Policy",
+              ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            InkWell(
+              onTap: () {
+                final res = logout();
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text("Logout Successful")));
                 context.read<Authprovider>().saveData(res);

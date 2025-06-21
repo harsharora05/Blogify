@@ -1,24 +1,55 @@
+import 'package:blog/httpRequests/postsRequest.dart';
 import 'package:blog/model/post_model.dart';
 import 'package:flutter/material.dart';
 
 class Favouritepostprovider extends ChangeNotifier {
-  List<Post> favPosts = [];
+  List<FavPost> favPosts = [];
 
-  Future<bool> toggleFavPosts(Post post) async {
+  Future<bool> toggleFavPosts(dynamic post) async {
     bool isContain = favPosts.any((favPost) => favPost.id == post.id);
     if (!isContain || favPosts.isEmpty) {
-      favPosts.add(post);
-      notifyListeners();
+      var newFavPost = FavPost(
+          content: post.content,
+          photo: post.photo,
+          title: post.title,
+          username: post.username,
+          category: post.category,
+          likes: post.likes,
+          id: post.id);
+      var status = await addFavPost(newFavPost.id);
+      if (status == 200) {
+        favPosts.add(newFavPost);
+        notifyListeners();
+      }
+
       return true;
     } else {
-      favPosts
-          .removeWhere((favPost) => favPost.id == post.id); // Remove post by id
-      notifyListeners();
+      var status = await removeFavPost(post.id);
+      if (status == 200) {
+        favPosts.removeWhere(
+            (favPost) => favPost.id == post.id); // Remove post by id
+        notifyListeners();
+        notifyListeners();
+      }
+
       return false;
     }
   }
 
   bool isPostFavorited(String postId) {
     return favPosts.any((favPost) => favPost.id == postId);
+  }
+
+  Future<void> InitialFavPosts() async {
+    notifyListeners();
+    try {
+      List<FavPost> post = await getFavPosts();
+      print(post.length);
+      favPosts.addAll(post);
+    } catch (e) {
+      print("Failed to load posts: $e");
+    } finally {
+      notifyListeners();
+    }
   }
 }

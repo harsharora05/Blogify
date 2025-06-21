@@ -1,4 +1,3 @@
-import 'package:blog/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +9,7 @@ class RecentPostCard extends StatelessWidget {
     required this.post,
   });
 
-  final Post post;
+  final dynamic post;
 
   @override
   Widget build(BuildContext context) {

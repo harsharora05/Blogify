@@ -98,6 +98,16 @@ class _AddpostState extends State<Addpost> {
                           children: [
                             TextFormField(
                               controller: titleController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please Enter Title";
+                                } else if (value.length < 5) {
+                                  return "Should Be More Than 5 characters";
+                                } else if (value.length > 70) {
+                                  return "Should Be Less Than 70 characters";
+                                }
+                                return null;
+                              },
                               decoration: InputDecoration(
                                 label: Text("Title"),
                                 border: OutlineInputBorder(
@@ -116,6 +126,16 @@ class _AddpostState extends State<Addpost> {
                             ),
                             TextFormField(
                               controller: contentController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please Enter Content";
+                                } else if (value.length < 50) {
+                                  return "Should Be More Than 50 characters";
+                                } else if (value.length > 3500) {
+                                  return "Should Be Less Than 3500 characters";
+                                }
+                                return null;
+                              },
                               maxLines: 12,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),

@@ -13,7 +13,9 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final _signupFormKey = GlobalKey<FormState>();
+  final _loginFormKey = GlobalKey<FormState>();
+
   bool isLogin = true;
   @override
   Widget build(BuildContext context) {
@@ -25,9 +27,10 @@ class _AuthScreenState extends State<AuthScreen> {
               children: [
                 Provider.of<AuthFormToggleProvider>(context, listen: true)
                         .isLoginForm
-                    ? SingleChildScrollView(child: LoginForm(formKey: _formKey))
+                    ? SingleChildScrollView(
+                        child: LoginForm(formKey: _loginFormKey))
                     : SingleChildScrollView(
-                        child: SignupForm(formKey: _formKey)),
+                        child: SignupForm(formKey: _signupFormKey)),
                 const SizedBox(
                   height: 15,
                 ),

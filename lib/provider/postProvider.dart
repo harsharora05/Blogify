@@ -53,8 +53,6 @@ class RecentPostProvider extends ChangeNotifier {
     Map<String, dynamic> res =
         await uploadPost(title, content, category, image);
     if (res["status"] == 200) {
-      print(
-          "${res["post"]["likes"]},${res["post"]["_id"]},${res["post"]["image"]},${username}");
       recentPosts.insert(
           0,
           Post(

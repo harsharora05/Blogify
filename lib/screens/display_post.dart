@@ -1,11 +1,10 @@
-import 'package:blog/model/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Displaypost extends StatelessWidget {
   const Displaypost({super.key, required this.post});
 
-  final Post post;
+  final dynamic post;
 
   void displayCommentsSheet(BuildContext context) {
     showModalBottomSheet(
