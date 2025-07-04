@@ -1,5 +1,6 @@
 import 'package:blog/provider/authFormToggleProvider.dart';
 import 'package:blog/provider/authProvider.dart';
+import 'package:blog/provider/commentsProvider.dart';
 import 'package:blog/provider/favourite_post_provider.dart';
 import 'package:blog/provider/postProvider.dart';
 import 'package:blog/screens/Auth_screen.dart';
@@ -11,18 +12,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final authProvider = Authprovider();
   await authProvider.initializeData();
-  final rPostProvider = RecentPostProvider();
-  await rPostProvider.InitialRecentPosts();
-  final pPostProvider = PopularPostProvider();
-  await pPostProvider.InitialPopularPosts();
-  final fPostProvider = Favouritepostprovider();
-  await fPostProvider.InitialFavPosts();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => AuthFormToggleProvider()),
+    ChangeNotifierProvider(create: (_) => Favouritepostprovider()),
     ChangeNotifierProvider(create: (_) => authProvider),
-    ChangeNotifierProvider(create: (_) => rPostProvider),
-    ChangeNotifierProvider(create: (_) => pPostProvider),
-    ChangeNotifierProvider(create: (_) => fPostProvider),
+    ChangeNotifierProvider(create: (_) => RecentPostProvider()),
+    ChangeNotifierProvider(create: (_) => PopularPostProvider()),
+    ChangeNotifierProvider(create: (_) => CommentsProvider())
   ], child: const Myapp()));
 }
 

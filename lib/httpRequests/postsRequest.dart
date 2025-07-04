@@ -148,11 +148,9 @@ Future<List<FavPost>> getFavPosts() async {
     var response = await http.get(url, headers: {"token": token.toString()});
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
-      print(jsonResponse);
       List<FavPost> favPosts = (jsonResponse["favPost"] as List<dynamic>)
           .map((json) => FavPost.fromJson(json))
           .toList();
-
       return favPosts;
     } else {
       throw "Cant load post";
@@ -167,7 +165,6 @@ Future<int> addFavPost(String id) async {
   var token = await userStorage.read(key: "token");
   try {
     var response = await http.post(url, headers: {"token": token.toString()});
-    print("Added ${response.statusCode}");
     return response.statusCode;
   } catch (e) {
     return 500;
@@ -179,7 +176,6 @@ Future<int> removeFavPost(String id) async {
   var token = await userStorage.read(key: "token");
   try {
     var response = await http.delete(url, headers: {"token": token.toString()});
-    print("Removed ${response.statusCode}");
     return response.statusCode;
   } catch (e) {
     return 500;

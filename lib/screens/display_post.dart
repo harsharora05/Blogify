@@ -1,23 +1,165 @@
+import 'package:blog/widgets/commentCard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:blog/provider/commentsProvider.dart';
 
 class Displaypost extends StatelessWidget {
   const Displaypost({super.key, required this.post});
-
   final dynamic post;
 
-  void displayCommentsSheet(BuildContext context) {
+  String getTimeAgo(String isoString) {
+    final dateTime =
+        DateTime.parse(isoString).toLocal(); // convert to local time
+    return timeago.format(dateTime); // e.g., "15 hours ago"
+  }
+
+  void displayCommentsSheet(BuildContext outerContext) {
+    var commentController = TextEditingController();
+    var _formKey = GlobalKey<FormState>();
     showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: 2300,
-            width: double.infinity,
-            color: Colors.amber,
-            child: Column(
-              children: [
-                OutlinedButton(onPressed: () {}, child: const Text("hello"))
-              ],
+        enableDrag: false,
+        isScrollControlled: true,
+        useSafeArea: true,
+        context: outerContext,
+        builder: (context) {
+          return Scaffold(
+            body: Container(
+              width: double.infinity,
+              color: Colors.grey.shade200,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icon(Icons.arrow_back)),
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Text(
+                          "Comments",
+                          style: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.w900),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Form(
+                    key: _formKey,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: commentController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Enter Comment";
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Write Comment",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 1,
+                              style: BorderStyle.solid,
+                            ),
+                          ),
+                          suffixIcon: Container(
+                            margin: EdgeInsets.all(8),
+                            child: ElevatedButton.icon(
+                                icon: Icon(
+                                  Icons.send,
+                                  color: Colors.black,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(100, 50),
+                                  backgroundColor: Colors.blueAccent,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                ),
+                                label: Text(
+                                  "Comment",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    var content = commentController.text;
+                                    var postId = post.id;
+
+                                    Map<String, dynamic> response =
+                                        await context
+                                            .read<CommentsProvider>()
+                                            .commentAddP(content, postId);
+                                    ScaffoldMessenger.of(outerContext)
+                                        .showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              response["message"].toString())),
+                                    );
+
+                                    if (response["statusCode"] == 200) {
+                                      commentController.clear();
+                                    }
+                                  }
+                                }),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                        padding: const EdgeInsets.all(7),
+                        child: Consumer<CommentsProvider>(
+                            builder: (ctx, CommentsProvider, child) {
+                          if (CommentsProvider.isLoading) {
+                            return Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                      height: 600,
+                                      width: double.infinity,
+                                      child: Center(
+                                          child: CircularProgressIndicator()))
+                                ],
+                              ),
+                            );
+                          } else if (CommentsProvider.comments.isEmpty) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                    height: 600,
+                                    width: double.infinity,
+                                    child: Center(child: Text("No Comments")))
+                              ],
+                            );
+                          } else {
+                            return Expanded(
+                              child: ListView.builder(
+                                  controller: ScrollController(),
+                                  shrinkWrap: true,
+                                  itemCount: CommentsProvider.comments.length,
+                                  itemBuilder: (context, index) {
+                                    return commentCard(
+                                      isReply: false,
+                                      comment: CommentsProvider.comments[index],
+                                    );
+                                  }),
+                            );
+                          }
+                        })),
+                  )
+                ],
+              ),
             ),
           );
         });
@@ -70,7 +212,7 @@ class Displaypost extends StatelessWidget {
                         fontSize: 15),
                   ),
                   Text(
-                    "1 min ago",
+                    getTimeAgo(post.createdAt),
                     style: GoogleFonts.lato(
                         color: const Color.fromARGB(255, 188, 187, 187),
                         fontSize: 15),
@@ -89,6 +231,8 @@ class Displaypost extends StatelessWidget {
                       icon: const Icon(Icons.thumb_up_alt_outlined)),
                   IconButton(
                       onPressed: () {
+                        Provider.of<CommentsProvider>(context, listen: false)
+                            .getComments(post.id);
                         displayCommentsSheet(context);
                       },
                       icon: const Icon(Icons.comment_outlined)),

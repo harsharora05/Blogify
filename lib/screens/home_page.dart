@@ -1,6 +1,7 @@
 import 'package:blog/data/post_data.dart';
 import 'package:blog/httpRequests/postsRequest.dart';
 import 'package:blog/model/post_model.dart';
+import 'package:blog/provider/favourite_post_provider.dart';
 import 'package:blog/provider/postProvider.dart';
 import 'package:blog/screens/display_post.dart';
 import 'package:blog/widgets/PopularPostCard.dart';
@@ -24,7 +25,15 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.addListener(_onScroll);
+      Provider.of<RecentPostProvider>(context, listen: false)
+          .InitialRecentPosts();
+      Provider.of<Favouritepostprovider>(context, listen: false)
+          .InitialFavPosts();
+      Provider.of<PopularPostProvider>(context, listen: false)
+          .InitialPopularPosts();
+    });
   }
 
   void _onScroll() {

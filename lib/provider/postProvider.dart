@@ -61,6 +61,7 @@ class RecentPostProvider extends ChangeNotifier {
               title: res["post"]["title"],
               username: username.toString(),
               category: res["post"]["category"],
+              createdAt: res["post"]["createdAt"],
               likes: res["post"]["likes"],
               id: res["post"]["_id"]));
       notifyListeners();

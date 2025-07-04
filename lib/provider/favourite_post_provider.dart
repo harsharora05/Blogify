@@ -9,6 +9,7 @@ class Favouritepostprovider extends ChangeNotifier {
     bool isContain = favPosts.any((favPost) => favPost.id == post.id);
     if (!isContain || favPosts.isEmpty) {
       var newFavPost = FavPost(
+          createdAt: post.createdAt,
           content: post.content,
           photo: post.photo,
           title: post.title,
@@ -29,7 +30,6 @@ class Favouritepostprovider extends ChangeNotifier {
         favPosts.removeWhere(
             (favPost) => favPost.id == post.id); // Remove post by id
         notifyListeners();
-        notifyListeners();
       }
 
       return false;
@@ -41,11 +41,9 @@ class Favouritepostprovider extends ChangeNotifier {
   }
 
   Future<void> InitialFavPosts() async {
-    notifyListeners();
     try {
       List<FavPost> post = await getFavPosts();
-      print(post.length);
-      favPosts.addAll(post);
+      favPosts = post;
     } catch (e) {
       print("Failed to load posts: $e");
     } finally {
