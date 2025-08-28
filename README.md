@@ -38,7 +38,7 @@ https://github.com/user-attachments/assets/4e379ff3-41ff-4e91-85b0-cc8948baf8c1
 
 ## 🔮 Future Enhancements
 
-#### 🖼 Rich Text Editor with support for images, code blocks, and formatting
+#### 🖼 Rich Text Editor
 #### 🔍 Advanced search & filtering for posts and authors
 #### 🗂 Pagination
 #### ⚡ Lazy Loading
