@@ -1,16 +1,48 @@
-# blog
+# 📝 Blogify
 
-A new Flutter project.
+A **cross-platform blogging application** built with **Flutter** for the frontend and **Node.js, Express.js, MongoDB** for the backend.  
+Blogify enables users to create, read, update, and delete blog posts with seamless authentication and a smooth UI experience.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Features
+- 🔐 **User Authentication** (Sign up, Login, JWT-based session management)
+- 📖 **CRUD Operations** for blog posts
+- 💾 **Data Persistence** with Provider state management
+- 🌐 **RESTful APIs** for posts, authentication, and comments
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🛠 Tech Stack
+**Frontend:** Flutter, Provider (state management)  
+**Backend:** Node.js, Express.js  
+**Database:** MongoDB  
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 📦 Getting Started
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/harsharora05/Blogify.git
+flutter pub get
+flutter run
+```
+
+## 🎥 Video Demo
+
+https://github.com/user-attachments/assets/4e379ff3-41ff-4e91-85b0-cc8948baf8c1
+
+
+
+
+## 🔮 Future Enhancements
+
+#### 🖼 Rich Text Editor with support for images, code blocks, and formatting
+#### 🔍 Advanced search & filtering for posts and authors
+#### 🗂 Pagination
+#### ⚡ Lazy Loading
+
+## 🔗 Backend Repository
+👉 [Blogify Backend](https://github.com/harsharora05/blogify-node.git)
+
